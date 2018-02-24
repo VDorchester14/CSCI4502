@@ -20,25 +20,33 @@ def normalization ( fileName , normalizationType , attribute):
     #TODO: Write code given the Input / Output Paramters.
     path = './'+str(fileName)#set the path
     df = pd.read_csv(path)
-    
+    #if they want min max normalization
     if(normalizationType == 'min_max'):#min max
+        #get the min max and make a list
         ma = df[attribute].max()#get max
         mi = df[attribute].min()#get min
         normalized_col = []#list
+        #calculate norm for each value
         for val in df[attribute]:#go down rows of that attribute
             n = ((val-mi)/(ma-mi))*(1-0)+(0)#norm value
             normalized_col.append(n)#adding to list
             print("{0:.3f}\t{1:.3f}".format(val, n))#print it
+        #add these to the dataframe for later use?    
         df['normalized_'+str(attribute)] = normalized_col#append the norms to the df
+    #if they want z_score normalization    
     elif(normalizationType=='z_score'):#z score
+        #calculate standard dev, mean, and make a norm col
         std = df[attribute].std()#get standard
-        mean = df[attribute].std()#mean
-        normalized_col = []#list 
+        mean = df[attribute].mean()#mean
+        normalized_col = []#list
+        #calc each norm value
         for val in df[attribute]:#
             n = (val-mean)/std#calc that value
             normalized_col.append(n)#add it to the list
             print("{0:.3f}\t{1:.3f}".format(val, n))#print it
+        #add it to the dataframe for later use?    
         df['normalized_'+str(attribute)] = normalized_col#add it to the dataframe
+    #if one of these normalization methods wasn't selected then print this    
     else:
         print("Not a valid normalization method.")
 
@@ -54,7 +62,25 @@ def correlation ( attribute1 , fileName1 , attribute2, fileName2 ):
         Print the correlation coefficient 
     '''
     #TODO: Write code given the Input / Output Paramters.
+    path1 = './'+str(fileName1)#set the paths
+    path2 = './'+str(fileName2)#set the paths
+    df1 = pd.read_csv(path1)#load the dfs
+    df2 = pd.read_csv(path2)#load the dfs
 
+    #now get standard deviations and means for calculations
+    std1 = df1[attribute1].std()
+    std2 = df2[attribute2].std()
+    mean1 = df1[attribute1].mean()
+    mean2 = df2[attribute2].mean()
+    #calculating correlation coefficient r
+    r = np.sum([df1[attribute1]*df2[attribute2]])
+    r = r - df1[attribute1].count()*(mean1*mean2)
+    r = r/(df1[attribute1].count()*std1*std2)
+    print(r)
+    #didn't use the stuff below, but i'm keeping it because it is helpful for me
+    #combine the attributes we want to compare into one frame i guess
+    #combined_frames = pd.concat([df1[attribute1], df2[attribute2]], axis=1, keys=[attribute1, attribute2])
+    
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Data Mining HW2')
     parser.add_argument('-f1', type=str,
