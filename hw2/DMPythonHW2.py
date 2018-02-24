@@ -21,17 +21,24 @@ def normalization ( fileName , normalizationType , attribute):
     path = './'+str(fileName)#set the path
     df = pd.read_csv(path)
     
-    if(normalizationType == 'min_max'):
+    if(normalizationType == 'min_max'):#min max
         ma = df[attribute].max()#get max
         mi = df[attribute].min()#get min
-        normalized_col = []
+        normalized_col = []#list
         for val in df[attribute]:#go down rows of that attribute
-            n = ((val-mi)/(ma-mi))*(1-0)+(0)
-            normalized_col.append(n)
-            print("{0:.3f}\t{1:.3f}".format(val, n))
+            n = ((val-mi)/(ma-mi))*(1-0)+(0)#norm value
+            normalized_col.append(n)#adding to list
+            print("{0:.3f}\t{1:.3f}".format(val, n))#print it
         df['normalized_'+str(attribute)] = normalized_col#append the norms to the df
-    elif(normalizationType=='z_score'):
-        print("banana")
+    elif(normalizationType=='z_score'):#z score
+        std = df[attribute].std()#get standard
+        mean = df[attribute].std()#mean
+        normalized_col = []#list 
+        for val in df[attribute]:#
+            n = (val-mean)/std#calc that value
+            normalized_col.append(n)#add it to the list
+            print("{0:.3f}\t{1:.3f}".format(val, n))#print it
+        df['normalized_'+str(attribute)] = normalized_col#add it to the dataframe
     else:
         print("Not a valid normalization method.")
 
