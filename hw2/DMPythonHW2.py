@@ -5,6 +5,8 @@
 #If it follows a different format, avoid it or remove it.
 
 import argparse
+import pandas as pd
+import numpy as np
 
 def normalization ( fileName , normalizationType , attribute):
     '''
@@ -16,6 +18,22 @@ def normalization ( fileName , normalizationType , attribute):
         For each line in the input file, print the original "attribute" value and "normalized" value seperated by <TAB> 
     '''
     #TODO: Write code given the Input / Output Paramters.
+    path = './'+str(fileName)#set the path
+    df = pd.read_csv(path)
+    
+    if(normalizationType == 'min_max'):
+        ma = df[attribute].max()#get max
+        mi = df[attribute].min()#get min
+        normalized_col = []
+        for val in df[attribute]:#go down rows of that attribute
+            n = ((val-mi)/(ma-mi))*(1-0)+(0)
+            normalized_col.append(n)
+            print("{0:.3f}\t{1:.3f}".format(val, n))
+        df['normalized_'+str(attribute)] = normalized_col#append the norms to the df
+    elif(normalizationType=='z_score'):
+        print("banana")
+    else:
+        print("Not a valid normalization method.")
 
 def correlation ( attribute1 , fileName1 , attribute2, fileName2 ):
     '''
@@ -52,12 +70,12 @@ if __name__ == "__main__":
                             required=False)
 
 
-
+    
     args = parser.parse_args()
-
+    
     if ( args.n and args.a1 ):
         normalization( args.f1 , args.n , args.a1 )
     elif ( args.f2 and args.a1 and args.a2):
         correlation ( args.a1 , args.f1 , args.a2 , args.f2 )
     else:
-        print "Kindly provide input of the following form:\nDMPythonHW2.py -f1 <filename1> -a1 <attribute> -n <normalizationType> \nDMPythonHW2.py -f1 <filename1> -a1 <attribute> -f2 <filename2> -a2 <attribute>"
+        print("Kindly provide input of the following form:\nDMPythonHW2.py -f1 <filename1> -a1 <attribute> -n <normalizationType> \nDMPythonHW2.py -f1 <filename1> -a1 <attribute> -f2 <filename2> -a2 <attribute>")
