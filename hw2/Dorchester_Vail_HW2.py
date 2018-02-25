@@ -1,5 +1,5 @@
 #Assignment based on http://www.nasdaq.com/quotes/
-#Feel free to use any libraries. 
+#Feel free to use any libraries.
 #Make sure that the output format is perfect as mentioned in the problem.
 #Also check the second row of the download dataset.
 #If it follows a different format, avoid it or remove it.
@@ -17,7 +17,7 @@ def normalization ( fileName , normalizationType , attribute):
         attribute: The attribute for which you are performing the normalization
         normalizationType: The type of normalization you are performing
     Output:
-        For each line in the input file, print the original "attribute" value and "normalized" value seperated by <TAB> 
+        For each line in the input file, print the original "attribute" value and "normalized" value seperated by <TAB>
     '''
     #TODO: Write code given the Input / Output Paramters.
     path = './'+str(fileName)#set the path
@@ -33,9 +33,9 @@ def normalization ( fileName , normalizationType , attribute):
             n = ((val-mi)/(ma-mi))*(1-0)+(0)#norm value
             normalized_col.append(n)#adding to list
             print("{0:.3f}\t{1:.3f}".format(val, n))#print it
-        #add these to the dataframe for later use?    
+        #add these to the dataframe for later use?
         df['normalized_'+str(attribute)] = normalized_col#append the norms to the df
-    #if they want z_score normalization    
+    #if they want z_score normalization
     elif(normalizationType=='z_score'):#z score
         #calculate standard dev, mean, and make a norm col
         std = df[attribute].std()#get standard
@@ -46,9 +46,9 @@ def normalization ( fileName , normalizationType , attribute):
             n = (val-mean)/std#calc that value
             normalized_col.append(n)#add it to the list
             print("{0:.3f}\t{1:.3f}".format(val, n))#print it
-        #add it to the dataframe for later use?    
+        #add it to the dataframe for later use?
         df['normalized_'+str(attribute)] = normalized_col#add it to the dataframe
-    #if one of these normalization methods wasn't selected then print this    
+    #if one of these normalization methods wasn't selected then print this
     else:
         print("Not a valid normalization method.")
 
@@ -59,9 +59,9 @@ def correlation ( attribute1 , fileName1 , attribute2, fileName2 ):
         attribute2: The attribute you want to consider from file2
         fileName1: The comma seperated file1
         fileName2: The comma seperated file2
-        
+
     Output:
-        Print the correlation coefficient 
+        Print the correlation coefficient
     '''
     #TODO: Write code given the Input / Output Paramters.
     path1 = './'+str(fileName1)#set the paths
@@ -69,7 +69,7 @@ def correlation ( attribute1 , fileName1 , attribute2, fileName2 ):
     df1 = pd.read_csv(path1)#load the dfs
     df2 = pd.read_csv(path2)#load the dfs
 
-    #now get standard deviations and means for calculations
+    #now get standard deviations and means for calculationsd
     std1 = df1[attribute1].std()
     std2 = df2[attribute2].std()
     mean1 = df1[attribute1].mean()
@@ -82,30 +82,30 @@ def correlation ( attribute1 , fileName1 , attribute2, fileName2 ):
     #didn't use the stuff below, but i'm keeping it because it is helpful for me
     #combine the attributes we want to compare into one frame i guess
     #combined_frames = pd.concat([df1[attribute1], df2[attribute2]], axis=1, keys=[attribute1, attribute2])
-    
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Data Mining HW2')
     parser.add_argument('-f1', type=str,
                             help="Location of filename1. Use only f1 when working with only one file.",
                             required=True)
-    parser.add_argument("-f2", type=str, 
+    parser.add_argument("-f2", type=str,
                             help="Location of filename2. To be used only when there are two files to be compared.",
                             required=False)
-    parser.add_argument("-n", type=str, 
+    parser.add_argument("-n", type=str,
                             help="Type of Normalization. Select either min_max or z_score",
                             choices=['min_max','z_score'],
                             required=False)
-    parser.add_argument("-a1", type=str, 
+    parser.add_argument("-a1", type=str,
                             help="Type of Attribute for filename1. Select either open or high or low or close or volume",
                             choices=['open','high','low','close','volume'],
                             required=False)
-    parser.add_argument("-a2", type=str, 
+    parser.add_argument("-a2", type=str,
                             help="Type of Attribute for filename2. Select either open or high or low or close or volume",
                             choices=['open','high','low','close','volume'],
                             required=False)
-    
+
     args = parser.parse_args()
-    
+
     if ( args.n and args.a1 ):
         normalization( args.f1 , args.n , args.a1 )
     elif ( args.f2 and args.a1 and args.a2):
